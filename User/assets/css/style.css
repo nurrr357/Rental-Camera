@@ -40,6 +40,7 @@
   --gradient-1: linear-gradient(90deg, #0ea5ea, #0bd1d1 51%);
   --gradient-2: linear-gradient(90deg, #0ea5ea, #0bd1d1 51%, #0ea5ea);
   --gradient-3: linear-gradient(0deg, #000d1a, transparent);
+  --gradient-4: linear-gradient(0deg, #027843, #0bd1d1 51%);
 
   /** Border colors */
   --border-wild-blue-yonder: hsla(216, 33%, 68%, 1);
@@ -265,13 +266,46 @@ body.nav-active { overflow: hidden; }
   padding: 8px 16px;
   border-radius: var(--radius-6);
 }
+.btn-green {
+  padding: 8px 16px;
+  border-radius: var(--radius-6);
+  background-image: var(--gradient-4);
+  background-size: 200%;
+  background-position: left;
+  color: var(--white);
+  font-size: var(--fontSize-6);
+  font-weight: var(--weight-bold);
+  max-width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: var(--transition-1);
+}
+
+.sign-up-button {
+  background-color: #0e1320; 
+  color: #fff; 
+  border: 2px solid #1e90ff; 
+  border-radius: 6px;
+  padding: 10px 20px; 
+  color: var(--white);
+  font-size: var(--fontSize-6);
+  font-weight: var(--weight-bold);
+  cursor: pointer; 
+  transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+.sign-up-button:hover {
+  background-color: #1e90ff; 
+  color: #0e1320; 
+}
 
 .btn-secondary {
   padding: 18px 30px;
   border-radius: var(--radius-pill);
 }
 
-.w-100 { width: 100%; }
+.w-100 { width: 65%; }
 
 .card {
   background-color: var(--bg-oxford-blue);
@@ -921,7 +955,7 @@ body.nav-active { overflow: hidden; }
 .copyright-link {
   display: inline-block;
   color: var(--text-carolina-blue);
-  font-style: italic;
+  font-style: var(--weight-bold);
 }
 
 .social-list {
