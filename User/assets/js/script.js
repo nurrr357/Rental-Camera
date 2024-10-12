@@ -111,3 +111,31 @@ window.addEventListener("resize", function () {
 
   moveSliderItem();
 });
+
+/**
+ * field get value dom and prevew using snackbar / toast
+ */
+
+
+document.getElementById("Subscribe").addEventListener("click", function() {
+  
+  // get value
+  let a = document.querySelector("input[name='name']").value;
+  let b = document.querySelector("input[name='email_address']").value;
+
+  //show snackbar
+  let snackbar = document.getElementById("snackbar");
+  snackbar.className = "show";
+  setTimeout(function() {
+    snackbar.className = snackbar.className.replace("show", "");
+  }, 3000);
+  
+  //preview
+  snackbar.style.textAlign = "justify"; 
+  if (a != "" && b != "") {
+    snackbar.innerHTML = "This is your name " + a + "<br>" + "This is your email address " + b;
+  } else {
+    snackbar.innerHTML = "Please fill in all the fields in the contact form.";
+  }
+
+});

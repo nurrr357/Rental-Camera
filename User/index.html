@@ -32,7 +32,6 @@
   <!-- 
     - preload images
   -->
-  <link rel="preload" as="image" href="./assets/images/hero-banner.png">
   <link rel="preload" as="image" href="./assets/images/pattern-2.svg">
   <link rel="preload" as="image" href="./assets/images/pattern-3.svg">
 
@@ -528,11 +527,11 @@
 
           </ul>
 
-          <a href="#" class="btn btn-secondary">
+          <!-- <a href="#" class="btn btn-secondary">
             <span class="span">Show More Posts</span>
 
             <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
-          </a>
+          </a> -->
 
         </div>
 
@@ -549,7 +548,7 @@
       -->
 
       <section class="tags" aria-labelledby="tag-label">
-        <div class="container" style="margin-bottom: 60px;">
+        <div class="container" style="margin-bottom: 80px;">
 
           <h2 class="headline headline-2 section-title" id="tag-label">
             <span class="span">Popular Tags</span>
@@ -1326,7 +1325,7 @@
               <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
             </div>
             <div class="row" style="display: flex;">
-              <a href="#" class="btn btn-primary" style="margin-right: 3px;">
+              <a id="Subscribe" class="btn btn-primary" style="margin-right: 3px;cursor: pointer;">
                 <span class="span">Subscribe</span>
   
                 <ion-icon name="arrow-forward" aria-hidden="true"></ion-icon>
@@ -1383,6 +1382,8 @@
 
     </div>
   </footer>
+  <div id="snackbar"></div>
+
 
 
 
