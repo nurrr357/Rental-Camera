@@ -1,3 +1,67 @@
+<?php 
+include '../koneksi.php';
+
+if(isset($_POST['register'])) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO register (name, email, password) VALUES( '$username', '$email', '$password')";
+    if(empty($email) || empty($username) || empty($password)) {
+        echo "
+            <script>
+                alert('Pastikan Anda Mengisi Semua Data');
+            </script>
+        ";
+    }elseif(mysqli_query($koneksi, $sql)) {
+        echo "  
+            <script>
+                alert('Registrasi Berhasil Silahkan login');
+                window.location.href = 'index.php';
+            </script>
+        ";
+    }else {
+        echo "
+            <script>
+                alert('Terjadi Kesalahan');
+            </script>
+        ";
+    }
+}
+
+if(isset($_POST['login'])) {
+  $requestUsername = $_POST['username'];
+  $requestPassword = $_POST['password'];
+
+  $sql = "SELECT * FROM register WHERE name = '$requestUsername'";
+  list($id, $name, $email,  $password) = mysqli_fetch_row(mysqli_query($koneksi, $sql));
+  $result = mysqli_query($koneksi, $sql);
+  echo $requestUsername, " ", $requestPassword; 
+  if(mysqli_num_rows($result) > 0) {
+    if (password_verify($requestPassword, $password)) {
+        while($row = mysqli_fetch_assoc($result)) {
+            session_start();
+            $_SESSION['username'] = $row['name'];
+            header("location: ../Admin/index.php");
+        }
+      } else { 
+          echo "
+          <script>
+            alert('email atau password anda salah, Silahkan coba lagi');
+            window.location = 'index.php';
+          </script>
+          ";
+      }
+    } else { 
+        echo "
+        <script>
+          alert('email atau password anda salah, Silahkan coba lagi');
+        </script>
+        ";
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,17 +76,17 @@
     <div class="container">
       <div class="forms-container">
         <div class="signin-signup">
-          <form action="" class="sign-in-form">
+          <form action="" method="POST" class="sign-in-form">
             <h2 class="title">Sign In</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" placeholder="Username" />
+              <input type="text" placeholder="Username" name="username"/>
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
+              <input type="password" placeholder="Password" name="password"/>
             </div>
-            <input type="submit" value="Login" class="btn solid" />
+            <input type="submit" value="Login" class="btn solid" name="login" />
 
             <p class="social-text">Or Sign in with social platforms</p>
             <div class="social-media">
@@ -42,21 +106,21 @@
           </form>
 
 
-          <form action="" class="sign-up-form">
+          <form action="" method="POST" class="sign-up-form">
             <h2 class="title">Sign Up</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input type="text" placeholder="Username" />
+              <input type="text" placeholder="Username" name="username" />
             </div>
             <div class="input-field">
               <i class="fas fa-envelope"></i>
-              <input type="email" placeholder="Email" />
+              <input type="email" placeholder="Email" name="email" />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
+              <input type="password" placeholder="Password" name="password"/>
             </div>
-            <input type="submit" value="Sign Up" class="btn solid" />
+            <input type="submit" value="Sign Up" class="btn solid" name="register"/>
 
             <p class="social-text">Or Sign up with social platforms</p>
             <div class="social-media">

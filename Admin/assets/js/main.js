@@ -22,19 +22,17 @@ toggle.onclick = function () {
 
 var modal = document.getElementById('myModal');
 
+var updateModal = document.getElementById('updateModal');
+
 var openModalBtn = document.getElementById('openModalBtn');
+
+var openModalBtn = document.getElementById('openupdate');
 
 var closeSpan = document.getElementsByClassName('close')[0];
 
-var closeModalBtn = document.getElementById('closeModalBtn');
 
 openModalBtn.onclick = function() {
     modal.style.display = 'block';
-    function showMessage() {
-      alert("Ini adalah pesan yang ditampilkan setelah 3 detik!");
-    }
-    
-    setTimeout(showMessage, 3000);
 }
 
 closeSpan.onclick = function() {
@@ -50,5 +48,20 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  if (successMessage) {
+      // Show the message
+      successMessage.style.display = "block";
+
+      // Hide the message after 3 seconds
+      setTimeout(() => {
+          successMessage.style.display = "none";
+      }, 3000);
+  }
+});
+
+
 
 

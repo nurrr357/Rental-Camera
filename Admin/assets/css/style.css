@@ -115,7 +115,7 @@ body {
 /* Modal Content */
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 10% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
@@ -393,10 +393,10 @@ body {
   text-align: center;
 }
 .details .recentOrders table tr td:nth-child(4) {
-  text-align: end;
+  text-align: center;
 }
 .details .recentOrders table tr td:nth-child(4) {
-  text-align: end;
+  text-align: center;
 }
 .status.delivered {
   padding: 2px 4px;
@@ -475,6 +475,73 @@ body {
   color: var(--white);
 }
 
+/* Heading styling */
+#myModal .modal-content h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Input field styling */
+#myModal .modal-content input[type="text"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #333;
+  transition: border-color 0.3s ease;
+}
+
+#myModal .modal-content input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Save button styling */
+#saveButton {
+  display: inline-block;
+  width: 100%;
+  background-color: #007bff; /* Blue color */
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#saveButton:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: scale(1.02); /* Slight zoom effect */
+}
+
+#saveButton:active {
+  background-color: #004085; /* Even darker blue on click */
+  transform: scale(0.98); /* Slight shrink effect */
+}
+
+.message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: green;
+  display: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modal-content {
+      width: 80%; /* Adjust for smaller screens */
+  }
+}
 /* ====================== Responsive Design ========================== */
 @media (max-width: 991px) {
   .navigation {

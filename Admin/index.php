@@ -34,7 +34,7 @@
                 </li>
                 
                 <li>
-                    <a href="camera.html">
+                    <a href="camera.php">
                         <span class="icon">
                             <ion-icon name="camera-outline"></ion-icon>
                         </span>
