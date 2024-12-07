@@ -3,18 +3,16 @@ include('../koneksi.php');
 session_start();
 $message = "";
 $i = 1;
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     // Ambil data dari form
     $camera_name = $koneksi->real_escape_string($_POST['camera_name']);
     $stok = (int)$_POST['stok'];
     $payment_method = $koneksi->real_escape_string($_POST['payment_method']);
     $status = $koneksi->real_escape_string($_POST['status']);
 
-    // Query untuk memasukkan data
     $sql = "INSERT INTO cameras (camera_name, stok, payment_method, status) 
             VALUES ('$camera_name', $stok, '$payment_method', '$status')";
 
-    // Eksekusi query
     if ($koneksi->query($sql) === TRUE) {
         $message = "Data successfully saved!";
         header("Location: " . $_SERVER['PHP_SELF']);
@@ -23,16 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Error: " . $sql . "<br>" . $koneksi->error;
     }
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_id'])) {
-    // Ambil data dari form
     $update_id = (int)$_POST['update_id'];
     $camera_name = $koneksi->real_escape_string($_POST['camera_name']);
     $stok = (int)$_POST['stok'];
     $payment_method = $koneksi->real_escape_string($_POST['payment_method']);
     $status = $koneksi->real_escape_string($_POST['status']);
 
-    // Query untuk update data
     $sql = "UPDATE cameras SET 
             camera_name = '$camera_name',
             stok = $stok,
@@ -45,9 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_id'])) {
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
     } else {
-        $message = "Error: " . $koneksi->error;
+        echo "Error: " . $sql . "<br>" . $koneksi->error;
     }
 }
+
+
 
 $see = "SELECT * FROM cameras";
 $result = $koneksi->query($see);
@@ -63,6 +60,20 @@ if (isset($_GET['delete_id'])) {
         $message = "Error: " . $koneksi->error;
     }
 }
+
+$edit_data = null; // Variable untuk menyimpan data kamera yang akan diedit
+if (isset($_GET['edit_id'])) {
+    $edit_id = (int)$_GET['edit_id'];
+    $edit_sql = "SELECT * FROM cameras WHERE id = $edit_id";
+    $edit_result = $koneksi->query($edit_sql);
+
+    if ($edit_result->num_rows > 0) {
+        $edit_data = $edit_result->fetch_assoc(); // Data kamera yang akan diedit
+    } else {
+        $message = "No data found for the given ID!";
+    }
+}
+
 
 ?>
 
@@ -92,7 +103,6 @@ if (isset($_GET['delete_id'])) {
                         <span class="title">Mavers</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="index.html">
                         <span class="icon">
@@ -173,7 +183,14 @@ if (isset($_GET['delete_id'])) {
                                         <td><?= htmlspecialchars($row['payment_method']); ?></td>
                                         <td><span class="status delivered"><?= htmlspecialchars($row['status']); ?></span></td>
                                         <td>
-                                            <a href="#" id="openupdate" class="btn-edit" id="myBtn">Edit</a>
+                                            <a href="#"
+                                                class="btn-edit"
+                                                data-id="<?= $row['id']; ?>"
+                                                data-camera-name="<?= htmlspecialchars($row['camera_name']); ?>"
+                                                data-stok="<?= $row['stok']; ?>"
+                                                data-payment-method="<?= htmlspecialchars($row['payment_method']); ?>"
+                                                data-status="<?= htmlspecialchars($row['status']); ?>">Edit</a>
+
                                             <a href="?delete_id=<?= $row['id']; ?>" class="btn-delete" onclick="return confirm('Are you sure you want to delete this record?');">Delete</a>
                                         </td>
                                     </tr>
@@ -183,59 +200,69 @@ if (isset($_GET['delete_id'])) {
                                     <td colspan="5">No data available</td>
                                 </tr>
                             <?php endif; ?>
-                            <div id="myModal" class="modal">
-                                <div class="modal-content">
-                                    <span class="close">&times;</span>
-                                    <h2>Detail Camera</h2>
-                                    <form id="cameraForm" method="POST">
-                                        <label for="camera_name">Camera Name:</label>
-                                        <input type="text" id="camera_name" name="camera_name" placeholder="Camera Name" required><br>
-                                        <label for="stok">Stock:</label>
-                                        <input type="text" id="stok" name="stok" placeholder="Stok" required><br>
-                                        <label for="payment">Payment Method:</label>
-                                        <input type="text" id="payment" name="payment_method" placeholder="Payment Method" required><br>
-                                        <label for="status">Status:</label>
-                                        <input type="text" id="status" name="status" placeholder="Status" required><br>
-                                        <button type="submit" id="saveButton">Save</button>
-                                    </form>
-                                    <?php if (!empty($message)): ?>
-                                        <p class="message"><?= $message; ?></p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <div id="updateModal" class="modal">
-                                <div class="modal-content">
-                                    <span class="close">&times;</span>
-                                    <h2>Edit Camera</h2>
-                                    <form id="updateForm" method="POST">
-                                        <!-- Hidden input untuk ID saat update -->
-                                        <input type="hidden" id="update_id" name="update_id" value="">
-
-                                        <label for="edit_camera_name">Camera Name:</label>
-                                        <input type="text" id="edit_camera_name" name="camera_name" placeholder="Camera Name" required><br>
-
-                                        <label for="edit_stok">Stock:</label>
-                                        <input type="text" id="edit_stok" name="stok" placeholder="Stock" required><br>
-
-                                        <label for="edit_payment">Payment Method:</label>
-                                        <input type="text" id="edit_payment" name="payment_method" placeholder="Payment Method" required><br>
-
-                                        <label for="edit_status">Status:</label>
-                                        <input type="text" id="edit_status" name="status" placeholder="Status" required><br>
-
-                                        <button type="submit" id="updateButton">Update</button>
-                                    </form>
-                                </div>
-                            </div>
 
                         </tbody>
                     </table>
                 </div>
             </div>
+
+
         </div>
     </div>
     <!-- modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div id="close-add">
+                <span class="close">&times;</span>
+            </div>
+            <h2>Add Camera</h2>
+            <form id="cameraForm" method="POST">
+                <label for="camera_name">Camera Name:</label>
+                <input type="text" id="camera_name" name="camera_name" placeholder="Camera Name" required><br>
+                <label for="stok">Stock:</label>
+                <input type="text" id="stok" name="stok" placeholder="Stok" required><br>
+                <label for="payment">Payment Method:</label>
+                <input type="text" id="payment" name="payment_method" placeholder="Payment Method" required><br>
+                <label for="status">Status:</label>
+                <input type="text" id="status" name="status" placeholder="Status" required><br>
+                <button type="submit" id="saveButton" name="submit">Save</button>
+            </form>
+            <?php if (!empty($message)): ?>
+                <p class="message"><?= $message; ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
 
+    <div id="updateModal" class="modal" style="display: <?= isset($_GET['edit_id']) ? 'block' : 'none'; ?>;">
+        <div class="modal-content">
+            <div id="close">
+                <span class="close">&times;</span>
+            </div>
+            <h2>Edit Camera</h2>
+            <form id="updateForm" method="POST">
+                <!-- Hidden input untuk ID saat update -->
+                <input type="hidden" id="update_id" name="update_id" value="<?= $edit_data['id'] ?? ''; ?>">
+
+                <label for="edit_camera_name">Camera Name:</label>
+                <input type="text" id="edit_camera_name" name="camera_name" placeholder="Camera Name"
+                    value="<?= htmlspecialchars($edit_data['camera_name'] ?? ''); ?>" required><br>
+
+                <label for="edit_stok">Stock:</label>
+                <input type="text" id="edit_stok" name="stok" placeholder="Stock"
+                    value="<?= htmlspecialchars($edit_data['stok'] ?? ''); ?>" required><br>
+
+                <label for="edit_payment">Payment Method:</label>
+                <input type="text" id="edit_payment" name="payment_method" placeholder="Payment Method"
+                    value="<?= htmlspecialchars($edit_data['payment_method'] ?? ''); ?>" required><br>
+
+                <label for="edit_status">Status:</label>
+                <input type="text" id="edit_status" name="status" placeholder="Status"
+                    value="<?= htmlspecialchars($edit_data['status'] ?? ''); ?>" required><br>
+
+                <button type="submit" id="updateButton">Update</button>
+            </form>
+        </div>
+    </div>
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
 

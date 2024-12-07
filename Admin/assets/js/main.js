@@ -22,45 +22,59 @@ toggle.onclick = function () {
 
 var modal = document.getElementById('myModal');
 
+var modalupdate = document.getElementById('updateForm');
+
 var updateModal = document.getElementById('updateModal');
 
 var openModalBtn = document.getElementById('openModalBtn');
 
-var openModalBtn = document.getElementById('openupdate');
 
-var closeSpan = document.getElementsByClassName('close')[0];
+var openModalUpdate = document.getElementsByClassName('openupdate');
+
+var closeSpanAdd = document.getElementsByClassName('close')[0];
+
+var closeSpanUpdate = document.getElementsByClassName('close')[1];
 
 
 openModalBtn.onclick = function() {
     modal.style.display = 'block';
 }
 
-closeSpan.onclick = function() {
-    modal.style.display = 'none';
-}
+closeSpanAdd.onclick = function(event) {
+  modal.style.display = 'none';
+};
 
-closeModalBtn.onclick = function() {
-    modal.style.display = 'none';
-}
+document.querySelectorAll(".btn-edit").forEach((button) => {
+  button.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent page refresh
+      const id = button.getAttribute("data-id");
 
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
+      const cameraName = button.getAttribute("data-camera-name");
+      const stok = button.getAttribute("data-stok");
+      const paymentMethod = button.getAttribute("data-payment-method");
+      const status = button.getAttribute("data-status");
 
-document.addEventListener("DOMContentLoaded", function() {
-
-  if (successMessage) {
-      // Show the message
-      successMessage.style.display = "block";
-
-      // Hide the message after 3 seconds
-      setTimeout(() => {
-          successMessage.style.display = "none";
-      }, 3000);
-  }
+      // Set nilai ke input field di modal edit
+      document.getElementById("update_id").value = id;
+      document.getElementById("edit_camera_name").value = cameraName;
+      document.getElementById("edit_stok").value = stok;
+      document.getElementById("edit_payment").value = paymentMethod;
+      document.getElementById("edit_status").value = status;
+      // Fetch edit data dynamically (optional if data already rendered)
+      fetch(`?edit_id=${id}`)
+          .then((response) => response.text())
+          .then(() => {
+              updateModal.style.display = "block"; // Show modal
+          })
+          .catch((error) => console.error("Error fetching data:", error));
+  });
 });
+closeSpanUpdate.onclick = function(event) {
+  updateModal.style.display = 'none';
+};
+
+
+
 
 
 
