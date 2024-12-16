@@ -41,6 +41,14 @@
                         <span class="title">Kamera & Aksesoris</span>
                     </a>
                 </li>
+                <li>
+                    <a href="category.php">
+                        <span class="icon">
+                            <ion-icon name="camera-outline"></ion-icon>
+                        </span>
+                        <span class="title">Category</span>
+                    </a>
+                </li>
 
 
                 <li>

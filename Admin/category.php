@@ -62,18 +62,27 @@ if (isset($_GET['delete_id'])) {
     }
 }
 
-$edit_data = null; 
+$edit_data = null;
 if (isset($_GET['edit_id'])) {
     $edit_id = (int)$_GET['edit_id'];
     $edit_sql = "SELECT * FROM cameras WHERE id = $edit_id";
     $edit_result = $koneksi->query($edit_sql);
 
     if ($edit_result->num_rows > 0) {
-        $edit_data = $edit_result->fetch_assoc(); 
+        $edit_data = $edit_result->fetch_assoc();
     } else {
         $message = "No data found for the given ID!";
     }
 }
+
+$filter_name = isset($_GET['filter_name']) ? $koneksi->real_escape_string($_GET['filter_name']) : '';
+$see = "SELECT * FROM cameras";
+
+if (!empty($filter_name)) {
+    $see .= " WHERE camera_name LIKE '%$filter_name%'";
+}
+
+$result = $koneksi->query($see);
 
 
 ?>
@@ -164,15 +173,21 @@ if (isset($_GET['edit_id'])) {
             <div class="details">
                 <div class="recentOrders" style="min-width: 1200px;overflow-x: auto;">
                     <div class="cardHeader">
-                        <h2>Camera List</h2>
-                        <a href="#" id="openModalBtn" class="btn">Add Camera</a>
+                        <h2>Category List</h2>
+                        <form method="GET" action="" style="display: flex; gap: 10px;">
+                            <input type="text" name="filter_name" placeholder="Filter by Category Name" value="<?= htmlspecialchars($filter_name); ?>" style="padding: 5px;">
+                            <button type="submit" class="btn">Filter</button>
+                            <a href="<?= $_SERVER['PHP_SELF']; ?>" class="btn">Reset</a>
+                        </form>
+                        <a href="#" id="openModalBtn" class="btn">Add Category</a>
+                        <button id="generatePDF" class="btn btn-primary">Generate PDF</button>
                     </div>
 
                     <table>
                         <thead>
                             <tr>
                                 <td>Name</td>
-                                <td>Camera Name</td>
+                                <td>category</td>
                                 <td>Stock</td>
                                 <td>Payment Method</td>
                                 <td>Status</td>
@@ -223,10 +238,10 @@ if (isset($_GET['edit_id'])) {
             <div id="close-add">
                 <span class="close">&times;</span>
             </div>
-            <h2>Add Camera</h2>
+            <h2>Add Category</h2>
             <form id="cameraForm" method="POST">
-                <label for="camera_name">Camera Name:</label>
-                <input type="text" id="camera_name" name="camera_name" placeholder="Camera Name" required><br>
+                <label for="camera_name">category:</label>
+                <input type="text" id="camera_name" name="camera_name" placeholder="category" required><br>
                 <label for="stok">Stock:</label>
                 <input type="text" id="stok" name="stok" placeholder="Stok" required><br>
                 <label for="payment">Payment Method:</label>
@@ -246,13 +261,13 @@ if (isset($_GET['edit_id'])) {
             <div id="close">
                 <span class="close">&times;</span>
             </div>
-            <h2>Edit Camera</h2>
+            <h2>Edit Category</h2>
             <form id="updateForm" method="POST">
                 <!-- Hidden input untuk ID saat update -->
                 <input type="hidden" id="update_id" name="update_id" value="<?= $edit_data['id'] ?? ''; ?>">
 
-                <label for="edit_camera_name">Camera Name:</label>
-                <input type="text" id="edit_camera_name" name="camera_name" placeholder="Camera Name"
+                <label for="edit_camera_name">category:</label>
+                <input type="text" id="edit_camera_name" name="camera_name" placeholder="category"
                     value="<?= htmlspecialchars($edit_data['camera_name'] ?? ''); ?>" required><br>
 
                 <label for="edit_stok">Stock:</label>
@@ -271,6 +286,14 @@ if (isset($_GET['edit_id'])) {
             </form>
         </div>
     </div>
+
+
+    <script>
+        document.getElementById('generatePDF').addEventListener('click', function() {
+            window.open('cetak.php', '_blank');
+        });
+    </script>
+
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js"></script>
 
